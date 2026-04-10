@@ -29,7 +29,11 @@ async function routeRequest(request: Request) {
 }
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(
+    request: Request,
+    _env: Env,
+    _ctx: ExecutionContext
+  ): Promise<Response> {
     try {
       const response = await routeRequest(request);
       return withCors(response);

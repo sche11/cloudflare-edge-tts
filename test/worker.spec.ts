@@ -1,3 +1,5 @@
+/// <reference types="@cloudflare/vitest-pool-workers/types" />
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createExecutionContext,
@@ -65,6 +67,22 @@ describe("worker routes", () => {
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ voices: sampleVoices });
+  });
+
+  it("returns upstream error when voices fetch fails", async () => {
+    getVoicesMock.mockRejectedValueOnce(new Error("upstream failed"));
+
+    const response = await dispatch(
+      new IncomingRequest("https://example.com/voices")
+    );
+
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({
+      error: {
+        code: "TTS_UPSTREAM_ERROR",
+        message: "failed to fetch voices",
+      },
+    });
   });
 
   it("answers CORS preflight requests", async () => {
