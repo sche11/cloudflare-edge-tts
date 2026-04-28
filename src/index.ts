@@ -45,6 +45,14 @@ async function routeRequest(request: Request) {
     return handleOpenAiTts(request);
   }
 
+  if (pathname === "/v1/audio/voices") {
+    if (request.method !== "GET") {
+      return errorResponse(405, "METHOD_NOT_ALLOWED", "method not allowed");
+    }
+
+    return handleOpenAiVoices();
+  }
+
   if (pathname === "/v1/models") {
     if (request.method !== "GET") {
       return errorResponse(405, "METHOD_NOT_ALLOWED", "method not allowed");
