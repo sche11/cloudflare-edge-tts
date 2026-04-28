@@ -1,3 +1,4 @@
+import { INDEX_HTML } from "./lib/html";
 import { handleHealth } from "./handlers/health";
 import { handleModels } from "./handlers/openai-models";
 import { handleOpenAiTts } from "./handlers/openai-tts";
@@ -67,6 +68,19 @@ async function routeRequest(request: Request) {
     }
 
     return handleOpenAiVoices();
+  }
+
+  if (pathname === "/" || pathname === "/index.html") {
+    if (request.method !== "GET") {
+      return errorResponse(405, "METHOD_NOT_ALLOWED", "method not allowed");
+    }
+
+    return new Response(INDEX_HTML, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
   }
 
   return errorResponse(404, "NOT_FOUND", "route not found");
