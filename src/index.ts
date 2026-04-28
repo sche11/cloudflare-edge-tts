@@ -1,4 +1,5 @@
 import { handleHealth } from "./handlers/health";
+import { handleOpenAiTts } from "./handlers/openai-tts";
 import { handleTts } from "./handlers/tts";
 import { handleVoices } from "./handlers/voices";
 import { errorResponse, noContent, withCors } from "./lib/http";
@@ -32,6 +33,14 @@ async function routeRequest(request: Request) {
     }
 
     return handleTts(request);
+  }
+
+  if (pathname === "/v1/audio/speech") {
+    if (request.method !== "POST") {
+      return errorResponse(405, "METHOD_NOT_ALLOWED", "method not allowed");
+    }
+
+    return handleOpenAiTts(request);
   }
 
   return errorResponse(404, "NOT_FOUND", "route not found");

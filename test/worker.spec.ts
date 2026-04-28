@@ -88,7 +88,7 @@ describe("worker routes", () => {
     expect(await response.json()).toEqual({
       error: {
         code: "TTS_UPSTREAM_ERROR",
-        message: "failed to fetch voices",
+        message: "upstream failed",
       },
     });
   });
@@ -306,7 +306,7 @@ describe("worker routes", () => {
     expect(await response.json()).toEqual({
       error: {
         code: "TTS_UPSTREAM_ERROR",
-        message: "failed to synthesize audio",
+        message: "upstream failed",
       },
     });
   });
@@ -336,7 +336,7 @@ describe("worker routes", () => {
     expect(await response.json()).toEqual({
       error: {
         code: "TTS_UPSTREAM_ERROR",
-        message: "failed to synthesize audio",
+        message: "stream failed",
       },
     });
   });
