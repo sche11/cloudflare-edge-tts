@@ -1,5 +1,7 @@
 import { handleHealth } from "./handlers/health";
+import { handleModels } from "./handlers/openai-models";
 import { handleOpenAiTts } from "./handlers/openai-tts";
+import { handleOpenAiVoices } from "./handlers/openai-voices";
 import { handleTts } from "./handlers/tts";
 import { handleVoices } from "./handlers/voices";
 import { errorResponse, noContent, withCors } from "./lib/http";
@@ -41,6 +43,22 @@ async function routeRequest(request: Request) {
     }
 
     return handleOpenAiTts(request);
+  }
+
+  if (pathname === "/v1/models") {
+    if (request.method !== "GET") {
+      return errorResponse(405, "METHOD_NOT_ALLOWED", "method not allowed");
+    }
+
+    return handleModels();
+  }
+
+  if (pathname === "/v1/voices") {
+    if (request.method !== "GET") {
+      return errorResponse(405, "METHOD_NOT_ALLOWED", "method not allowed");
+    }
+
+    return handleOpenAiVoices();
   }
 
   return errorResponse(404, "NOT_FOUND", "route not found");
