@@ -1,0 +1,16 @@
+{
+  "version": "1",
+  "rules": [
+    {
+      "base": "main",
+      "upstream": "DIYgod:main",
+      "mergeMethod": "none",
+      "mergeUnstable": false,
+      "assignees": sche11,
+      "reviewers": sche11,
+      "conflictReviewers": sche11
+    }
+  ],
+  "label": ":arrow_heading_down: pull",
+  "conflictLabel": "merge-conflict"
+}
