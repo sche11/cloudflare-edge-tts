@@ -53,6 +53,111 @@ Validation and error behavior:
 - Rejects empty `voice` strings
 - Returns `502` when the upstream TTS request fails before the audio response starts, for example before or while priming the first chunk
 
+## OpenAI Compatible API
+
+This Worker also provides OpenAI-compatible endpoints for easy integration with existing tools and SDKs.
+
+### `POST /v1/audio/speech`
+
+OpenAI-compatible speech synthesis endpoint.
+
+Request body:
+
+```json
+{
+  "model": "tts-1",
+  "input": "你好，世界",
+  "voice": "alloy",
+  "speed": 1.0
+}
+```
+
+Parameters:
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `model` | string | Yes | Supported: `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts` |
+| `input` | string | Yes | Text to synthesize (max 4096 chars) |
+| `voice` | string | Yes | Voice ID or Edge TTS voice name |
+| `speed` | number | No | Speech speed, 0.25 to 4.0, default 1.0 |
+| `response_format` | string | No | Audio format (always returns MP3) |
+
+Voice mapping:
+
+| OpenAI Voice | Edge TTS Voice |
+|-------------|----------------|
+| `alloy` | en-US-AvaMultilingualNeural |
+| `ash` | en-US-AndrewMultilingualNeural |
+| `ballad` | en-US-EmmaMultilingualNeural |
+| `coral` | en-US-AriaNeural |
+| `echo` | en-US-BrianMultilingualNeural |
+| `fable` | en-US-EmmaMultilingualNeural |
+| `onyx` | en-US-BrianMultilingualNeural |
+| `nova` | en-US-JennyNeural |
+| `sage` | en-US-DavisNeural |
+| `shimmer` | en-US-MichelleNeural |
+| `verse` | en-US-ChristopherNeural |
+| `marin` | en-US-AriaNeural |
+| `cedar` | en-US-GuyNeural |
+
+You can also use any Edge TTS voice name directly (e.g., `zh-CN-XiaoxiaoNeural`).
+
+### `GET /v1/audio/voices`
+
+Returns all available Edge TTS voices with their metadata:
+
+```json
+{
+  "voices": [
+    {
+      "voice_id": "zh-CN-XiaoxiaoNeural",
+      "name": "Xiaoxiao",
+      "gender": "Female",
+      "locale": "zh-CN",
+      "personalities": ["Friendly", "Positive"],
+      "categories": ["News", "Novel"]
+    }
+  ]
+}
+```
+
+### `GET /v1/models`
+
+Returns supported models:
+
+```json
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "tts-1",
+      "object": "model",
+      "created": 1686935002,
+      "owned_by": "cloudflare-edge-tts"
+    }
+  ]
+}
+```
+
+### OpenAI SDK Usage
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://your-worker.workers.dev/v1",
+    api_key="not-needed"
+)
+
+response = client.audio.speech.create(
+    model="tts-1",
+    voice="alloy",
+    input="你好，世界"
+)
+
+response.stream_to_file("speech.mp3")
+```
+
 ## Setup
 
 Install dependencies:
